@@ -18,17 +18,18 @@ public class APISamples {
 
     public static void main(String[] args) throws IOException {
 
-
+        // 初始化SDK
         EKYCProxy proxy = new EKYCProxy();
         proxy.injectClient(new ProxyHttpClient(new URL("http://106.14.59.4:8950")));
 
-        System.out.println("getInfo UserInfoResponse:");
-        ProxyResponse<UserInfo> info = proxy.getInfo();
+
         System.out.println("postUsers UserInfoResponse:");
-        ProxyResponse<UserInfo> users = proxy.postUsers();
+        ProxyResponse<UserInfo> user = proxy.postUsers();
+
 
         System.out.println("getSnapshot with id:");
         ProxyResponse<SnapshotResponse> snapshotResponse = proxy.getSnapshot(375);
+
 
         SnapshotsRequest snapshotsRequest = new SnapshotsRequest();
         snapshotsRequest.setAsset(testAsset);
@@ -36,31 +37,32 @@ public class APISamples {
         System.out.println("getSnapshots SnapshotsResponse:");
         ProxyResponse<SnapshotsResponse> snapshots = proxy.getSnapshots(snapshotsRequest);
 
-//        TransactionRequest transactionRequest = new TransactionRequest()
-//                .setAsset(testAsset)
-//                .setOpponent_addresses(Collections.singletonList(opponentAddress))
-//                .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
-//                .setTrace_id(UUID.randomUUID().toString());
-//
-//        System.out.println("postTransaction:");
-//        ProxyResponse<SnapshotResponse> postTransaction = proxy.postTransaction(transactionRequest);
-//
-//        TransactionRequest fileTransactionRequest = new TransactionRequest()
-//                .setAsset(testAsset)
-//                .setOpponent_addresses(Collections.singletonList(opponentAddress))
-//                .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
-//                .setTrace_id(UUID.randomUUID().toString());
-//
-//        File file = new File("./src/test/java/xin/heng/ProxyHttpClient.java");
-//        System.out.println("postFileTransaction:");
-//        ProxyResponse<SnapshotResponse> postFileTransaction = proxy.postFileTransaction(fileTransactionRequest, file);
-//
+
+        TransactionRequest transactionRequest = new TransactionRequest()
+                .setAsset(testAsset)
+                .setOpponent_addresses(Collections.singletonList(opponentAddress))
+                .setPub_data(new PubData<TestCard>().setD(new TestCard("张三", "4/10")).setT("test-t"))
+                .setTrace_id(UUID.randomUUID().toString());
+        System.out.println("postTransaction:");
+        ProxyResponse<SnapshotResponse> postTransaction = proxy.postTransaction(transactionRequest);
+
+
+        TransactionRequest fileTransactionRequest = new TransactionRequest()
+                .setAsset(testAsset)
+                .setOpponent_addresses(Collections.singletonList(opponentAddress))
+                .setPub_data(new PubData<TestCard>().setD(new TestCard("张三", "4/10")).setT("test-t"))
+                .setTrace_id(UUID.randomUUID().toString());
+
+        File file = new File("./src/test/java/xin/heng/ProxyHttpClient.java");
+        System.out.println("postFileTransaction:");
+        ProxyResponse<SnapshotResponse> postFileTransaction = proxy.postFileTransaction(fileTransactionRequest, file);
+
+
         TransactionRequest filesTransactionRequest = new TransactionRequest()
                 .setAsset(testAsset)
                 .setOpponent_addresses(Collections.singletonList(opponentAddress))
-                .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
+                .setPub_data(new PubData<TestCard>().setD(new TestCard("张三", "4/10")).setT("test-t"))
                 .setTrace_id(UUID.randomUUID().toString());
-
         FileInfo fileInfo = new FileInfo();
         fileInfo.setH("b1d31c3cf98cef34ce9f5c105f8ed488b09a64ec165b753a16e03f9f72ec1472");
         fileInfo.setRh("4285d38c8b1eea23062ebbf366c9db2f3de81778955df534e74b88c5cbf7f44b");
@@ -68,13 +70,13 @@ public class APISamples {
         System.out.println("postFileInfosTransaction:");
         ProxyResponse<SnapshotResponse> postFileInfosTransaction = proxy.postFileInfosTransaction(filesTransactionRequest, Collections.singletonList(fileInfo));
 
+
         File downloadFile = new File("./download/test_" + System.currentTimeMillis() + ".java");
         if (!downloadFile.exists()) {
             File parent = new File(downloadFile.getParent());
             if (!parent.exists()) parent.mkdirs();
             downloadFile.createNewFile();
         }
-
         System.out.println("getFile: ");
         ProxyResponse<File> fileResponse = proxy.getFile(fileInfo, downloadFile);
     }

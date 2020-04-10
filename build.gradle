@@ -3,9 +3,19 @@ plugins {
 }
 
 group 'xin.heng'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 sourceCompatibility = 1.8
+
+jar {
+
+    shouldRunAfter {
+        copy {
+            from getArchiveFile().get().asFile
+            into "./output/"
+        }
+    }
+}
 
 repositories {
     mavenCentral()

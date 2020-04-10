@@ -1,34 +1,24 @@
 package xin.heng.vo;
 
-public class PubData {
+public class PubData<D> {
     private String t; // type
-    private String d; // data
-    private String h; // hash
+    private D d; // data
 
     public String getT() {
         return t;
     }
 
-    public PubData setT(String t) {
+    public PubData<D> setT(String t) {
         this.t = t;
         return this;
     }
 
-    public String getD() {
+    public D getD() {
         return d;
     }
 
-    public PubData setD(String d) {
+    public PubData<D> setD(D d) {
         this.d = d;
-        return this;
-    }
-
-    public String getH() {
-        return h;
-    }
-
-    public PubData setH(String h) {
-        this.h = h;
         return this;
     }
 }

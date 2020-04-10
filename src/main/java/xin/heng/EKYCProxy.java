@@ -49,14 +49,6 @@ public class EKYCProxy {
         return client.post("/hx-proxy", headers, client.optToJson(proxyBody));
     }
 
-    public ProxyResponse<UserInfo> getInfo() {
-        String path = "/info";
-        ProxyResponse<String> response = hxGet(path, contentTypeJsonHeader());
-        ProxyResponse<UserInfo> userResponse = new ProxyResponse<>(response.httpCode, response.originError);
-        userResponse.body = client.optFromJson(response.body, UserInfo.class);
-        return userResponse;
-    }
-
     public ProxyResponse<UserInfo> postUsers() {
         String path = "/users";
         ProxyResponse<String> response = hxPost(path, contentTypeJsonHeader(), null);
