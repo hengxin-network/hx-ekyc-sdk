@@ -68,7 +68,15 @@ public class APISamples {
         System.out.println("postFileInfosTransaction:");
         ProxyResponse<SnapshotResponse> postFileInfosTransaction = proxy.postFileInfosTransaction(filesTransactionRequest, Collections.singletonList(fileInfo));
 
+        File downloadFile = new File("./download/test_" + System.currentTimeMillis() + ".java");
+        if (!downloadFile.exists()) {
+            File parent = new File(downloadFile.getParent());
+            if (!parent.exists()) parent.mkdirs();
+            downloadFile.createNewFile();
+        }
 
+        System.out.println("getFile: ");
+        ProxyResponse<File> fileResponse = proxy.getFile(fileInfo, downloadFile);
     }
 
 }

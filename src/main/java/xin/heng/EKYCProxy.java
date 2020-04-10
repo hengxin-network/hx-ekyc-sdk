@@ -4,9 +4,7 @@ import xin.heng.dto.*;
 import xin.heng.vo.FileInfo;
 import xin.heng.vo.UserInfo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,9 +132,13 @@ public class EKYCProxy {
         return snapshotResposne;
     }
 
-//    public ProxyResponse<File> getFile(){
-//        return
-//    }
+    public ProxyResponse<File> getFile(FileInfo fileInfo, File downloadFile) throws IOException {
+        String path = "/files/" + fileInfo.getH() + "/" + fileInfo.getS();
+        ProxyResponse<String> stringResponse = hxGet(path, contentTypeJsonHeader());
+        ProxyResponse<File> fileResponse = new ProxyResponse<>(stringResponse.httpCode, stringResponse.originError);
+        fileResponse.body = stringToFile(stringResponse.body, downloadFile);
+        return fileResponse;
+    }
 
     private static Map<String, String> contentTypeJsonHeader() {
         HashMap<String, String> headers = new HashMap<>();
@@ -211,5 +213,19 @@ public class EKYCProxy {
         System.arraycopy(afterBytes, 0, out, prevBytes.length + fileBytes.length + formBytes.length, afterBytes.length);
 
         return out;
+    }
+
+    private static File stringToFile(String content, File outFile) throws IOException {
+        byte[] bytes = content.getBytes();
+        FileOutputStream outputStream = new FileOutputStream(outFile);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        int bytesRead = 0;
+        byte[] buffer = new byte[1024];
+        while ((bytesRead = inputStream.read(buffer, 0, 1024)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.close();
+        inputStream.close();
+        return outFile;
     }
 }
