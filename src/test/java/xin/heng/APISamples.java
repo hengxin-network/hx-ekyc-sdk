@@ -1,7 +1,7 @@
 package xin.heng;
 
-import com.alibaba.fastjson.JSON;
 import xin.heng.dto.*;
+import xin.heng.vo.FileInfo;
 import xin.heng.vo.PubData;
 import xin.heng.vo.UserInfo;
 
@@ -22,31 +22,51 @@ public class APISamples {
         EKYCProxy proxy = new EKYCProxy();
         proxy.injectClient(new ProxyHttpClient(new URL("http://106.14.59.4:8950")));
 
-        System.out.println("UserInfoResponse:");
+        System.out.println("getInfo UserInfoResponse:");
         ProxyResponse<UserInfo> info = proxy.getInfo();
-        System.out.println("UsersResponse:");
+        System.out.println("postUsers UserInfoResponse:");
         ProxyResponse<UserInfo> users = proxy.postUsers();
+
+        System.out.println("getSnapshot with id:");
+        ProxyResponse<SnapshotResponse> snapshotResponse = proxy.getSnapshot(375);
 
         SnapshotsRequest snapshotsRequest = new SnapshotsRequest();
         snapshotsRequest.setAsset(testAsset);
         snapshotsRequest.setOrder(SnapshotsRequest.ORDER_DESC);
-        System.out.println("SnapshotsResponse:");
+        System.out.println("getSnapshots SnapshotsResponse:");
         ProxyResponse<SnapshotsResponse> snapshots = proxy.getSnapshots(snapshotsRequest);
 
-        TransactionRequest transactionRequest = new TransactionRequest()
+//        TransactionRequest transactionRequest = new TransactionRequest()
+//                .setAsset(testAsset)
+//                .setOpponent_addresses(Collections.singletonList(opponentAddress))
+//                .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
+//                .setTrace_id(UUID.randomUUID().toString());
+//
+//        System.out.println("postTransaction:");
+//        ProxyResponse<SnapshotResponse> postTransaction = proxy.postTransaction(transactionRequest);
+//
+//        TransactionRequest fileTransactionRequest = new TransactionRequest()
+//                .setAsset(testAsset)
+//                .setOpponent_addresses(Collections.singletonList(opponentAddress))
+//                .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
+//                .setTrace_id(UUID.randomUUID().toString());
+//
+//        File file = new File("./src/test/java/xin/heng/ProxyHttpClient.java");
+//        System.out.println("postFileTransaction:");
+//        ProxyResponse<SnapshotResponse> postFileTransaction = proxy.postFileTransaction(fileTransactionRequest, file);
+//
+        TransactionRequest filesTransactionRequest = new TransactionRequest()
                 .setAsset(testAsset)
                 .setOpponent_addresses(Collections.singletonList(opponentAddress))
                 .setPub_data(new PubData().setD("test-d").setH("test-h").setT("test-t"))
                 .setTrace_id(UUID.randomUUID().toString());
 
-        System.out.println("postTransaction:");
-        ProxyResponse<SnapshotResponse> postTransaction = proxy.postTransaction(transactionRequest);
-//        System.out.println(JSON.toJSONString(postTransaction));
-
-        File file = new File("./src/test/java/xin/heng/ProxyHttpClient.java");
-        System.out.println("postFileTransaction:");
-        ProxyResponse<SnapshotResponse> postFileTransaction = proxy.postFileTransaction(transactionRequest, file);
-        System.out.println(JSON.toJSONString(postFileTransaction));
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setH("b1d31c3cf98cef34ce9f5c105f8ed488b09a64ec165b753a16e03f9f72ec1472");
+        fileInfo.setRh("4285d38c8b1eea23062ebbf366c9db2f3de81778955df534e74b88c5cbf7f44b");
+        fileInfo.setS(2992);
+        System.out.println("postFileInfosTransaction:");
+        ProxyResponse<SnapshotResponse> postFileInfosTransaction = proxy.postFileInfosTransaction(filesTransactionRequest, Collections.singletonList(fileInfo));
 
 
     }

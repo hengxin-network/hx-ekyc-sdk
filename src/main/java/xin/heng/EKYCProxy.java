@@ -46,7 +46,7 @@ public class EKYCProxy {
         HashMap<String, Object> proxyBody = new HashMap<>();
         proxyBody.put("method", "POST");
         proxyBody.put("uri", uri);
-        proxyBody.put("content_type",headers.get("Content-Type"));
+        proxyBody.put("content_type", headers.get("Content-Type"));
         proxyBody.put("body", body);
         return client.post("/hx-proxy", headers, client.optToJson(proxyBody));
     }
@@ -119,7 +119,7 @@ public class EKYCProxy {
         return responseResponse;
     }
 
-    public ProxyResponse<String> updatePermission(TransactionRequest request, List<FileInfo> fileInfos) throws IOException {
+    public ProxyResponse<SnapshotResponse> postFileInfosTransaction(TransactionRequest request, List<FileInfo> fileInfos) throws IOException {
         String path = "/transactions";
         HashMap<String, Object> body = new HashMap<>();
         body.put("asset", request.getAsset());
@@ -129,8 +129,14 @@ public class EKYCProxy {
         body.put("files", client.optToJson(fileInfos));
         String boundary = UUID.randomUUID().toString();
         ProxyResponse<String> response = hxPost(path, contentTypeMultipartHeader(boundary), new String(convertMultiPartFormData(client, body, null, boundary)));
-        return response;
+        ProxyResponse<SnapshotResponse> snapshotResposne = new ProxyResponse<>(response.httpCode, response.originError);
+        snapshotResposne.body = client.optFromJson(response.body, SnapshotResponse.class);
+        return snapshotResposne;
     }
+
+//    public ProxyResponse<File> getFile(){
+//        return
+//    }
 
     private static Map<String, String> contentTypeJsonHeader() {
         HashMap<String, String> headers = new HashMap<>();
