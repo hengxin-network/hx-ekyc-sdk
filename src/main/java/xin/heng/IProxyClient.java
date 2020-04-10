@@ -3,6 +3,7 @@ package xin.heng;
 import xin.heng.dto.ProxyResponse;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public interface IProxyClient {
@@ -13,9 +14,9 @@ public interface IProxyClient {
      */
     URL getBaseUrl();
 
-    ProxyResponse<String> get(String path, Map<String, String> headers, Map<String, String> queries);
+    ProxyResponse<String> get(String path, Map<String, String> headers);
 
-    ProxyResponse<String> post(String path, Map<String, String> headers, Map<String, String> queries, Map<String, Object> body);
+    ProxyResponse<String> post(String path, Map<String, String> headers, String body);
 
     <T> T optFromJson(String jsonString, Class<T> clz);
 
